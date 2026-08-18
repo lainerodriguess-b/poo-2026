@@ -8,6 +8,7 @@ class Personagem:
         self.vida = self.vida - dano
     def estaVivo(self):
         return self.vida > 0
+    
     def ficha(self):
         print("Nome:", self.nome)
         print("Vida:", self.vida)
