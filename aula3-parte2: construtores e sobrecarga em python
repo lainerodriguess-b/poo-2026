@@ -1,1 +1,35 @@
+class Personagem:
 
+    def __init__(self, nome="Sem nome", vida=100, nivel=1):
+        self.nome = nome
+        self.vida = vida
+        self.nivel = nivel
+
+    def atacar(self, dano=None):
+        if dano is None:
+            print(f"{self.nome} ataque padrão!")
+        else:
+            print(f"{self.nome}  ataque com {dano} de dano!")
+
+    def mostrar_informacoes(self):
+        print(f"Nome: {self.nome}")
+        print(f"Vida: {self.vida}")
+        print(f"Nível: {self.nivel}")
+
+
+personagem1 = Personagem()
+personagem2 = Personagem("Laine", 150, 5)
+
+print("PERSONAGEM 1")
+personagem1.mostrar_informacoes()
+
+print("\nAtaques:")
+personagem1.atacar()
+personagem1.atacar(20)
+
+print("\nPERSONAGEM 2")
+personagem2.mostrar_informacoes()
+
+print("\nAtaques:")
+personagem2.atacar()
+personagem2.atacar(50)
