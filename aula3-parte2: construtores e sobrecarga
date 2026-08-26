@@ -1,0 +1,55 @@
+class Personagem {
+
+    private String nome;
+    private int vida;
+    private int nivel;
+
+    public Personagem() {
+        this.nome = "Sem nome";
+        this.vida = 100;
+        this.nivel = 1;
+    }
+
+    public Personagem(String nome, int vida, int nivel) {
+        this.nome = nome;
+        this.vida = vida;
+        this.nivel = nivel;
+    }
+
+    public void atacar() {
+        System.out.println(nome + " ataque padrão!");
+    }
+
+    public void atacar(int dano) {
+        System.out.println(nome + "ataque  " + dano + " de dano!");
+    }
+
+    public void mostrarInformacoes() {
+        System.out.println("Nome: " + nome);
+        System.out.println("Vida: " + vida);
+        System.out.println("Nível: " + nivel);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Personagem personagem1 = new Personagem();
+        Personagem personagem2 = new Personagem("Laine", 150, 5);
+
+        System.out.println("PERSONAGEM 1");
+        personagem1.mostrarInformacoes();
+
+        System.out.println("\nAtaques:");
+        personagem1.atacar();
+        personagem1.atacar(20);
+
+        System.out.println("\nPERSONAGEM 2");
+        personagem2.mostrarInformacoes();
+
+        System.out.println("\nAtaques:");
+        personagem2.atacar();
+        personagem2.atacar(50);
+    }
+}
