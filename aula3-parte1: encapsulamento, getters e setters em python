@@ -1,0 +1,50 @@
+class Personagem:
+
+    def __init__(self, nome, vida, nivel):
+        self.nome = nome
+        self.vida = vida
+        self.nivel = nivel
+
+    @property
+    def nome(self):
+        return self._nome
+
+    @nome.setter
+    def nome(self, nome):
+        if nome != "":
+            self._nome = nome
+        else:
+            print("Nome inválido!")
+
+    @property
+    def vida(self):
+        return self._vida
+
+    @vida.setter
+    def vida(self, vida):
+        if 0 <= vida <= 100:
+            self._vida = vida
+        else:
+            print("Vida inválida!")
+
+    @property
+    def nivel(self):
+        return self._nivel
+
+    @nivel.setter
+    def nivel(self, nivel):
+        if nivel >= 1:
+            self._nivel = nivel
+        else:
+            print("Nível inválido!")
+
+
+p = Personagem("Guerreiro", 80, 5)
+
+print("Nome:", p.nome)
+print("Vida:", p.vida)
+print("Nível:", p.nivel)
+
+p.nome = ""
+p.vida = 150
+p.nivel = 0
