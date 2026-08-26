@@ -1,0 +1,59 @@
+public class Main {
+    public static void main(String[] args) {
+
+        Personagem p = new Personagem();
+
+        p.setNome("Guerreiro");
+        p.setVida(80);
+        p.setNivel(5);
+
+        System.out.println("Nome: " + p.getNome());
+        System.out.println("Vida: " + p.getVida());
+        System.out.println("Nivel: " + p.getNivel());
+        p.setNome("");
+        p.setVida(150);
+        p.setNivel(0);
+    }
+}
+class Personagem {
+
+    private String nome;
+    private int vida;
+    private int nivel;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNome(String nome) {
+        if (!nome.isEmpty()) {
+            this.nome = nome;
+        } else {
+            System.out.println("Nome invalido!");
+        }
+    }
+
+    public void setVida(int vida) {
+        if (vida >= 0 && vida <= 100) {
+            this.vida = vida;
+        } else {
+            System.out.println("Vida invalida!");
+    }
+}
+
+    public void setNivel(int nivel) {
+        if (nivel >= 1) {
+            this.nivel = nivel;
+        } else {
+            System.out.println("Nivel invalido!");
+}      
+}
+}
