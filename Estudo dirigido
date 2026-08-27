@@ -128,5 +128,5 @@ Duas formas de criar o objeto: sobrecarga em Java ou parâmetros padrão em Pyth
 Pelo menos duas regras de validação que recusem valores inválidos:( Idade >18 e curso !=null)
 A demonstração roda e mostra uma criação válida, uma recusa e as duas formas de criação:
 Nesse caso a Aluna Laine seria a valida e o Aluno João Lucas o invalido, por conta da idade que está fora dos parametros .
-Parte mais trabalhosa: Fazer com que as duas classes e seus obejtos se relacionarem, como resolvi 
+Parte mais trabalhosa: Fazer com que as duas classes e seus obejtos se relacionarem- um objeto dentro de um objeto-, como resolvi: com ajuda da ai
 */
