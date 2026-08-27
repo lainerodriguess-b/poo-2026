@@ -1,0 +1,132 @@
+/* Dominio: Faculdade 
+Classes: Aluno(atributos:nome,idade,matricula,curso e professor) 
+e Professor(atributos:nome e disciplina) 
+Validações: Idade em aluno(> 18) e a matricula em aluno (!=null)
+Tempo estimado:60 minutos no total
+(40 minutos para a criação das classes e objetos , 
+5 minutos para adicionar os criterios de validação,
+10 minutos para criar a interação entre as classes e objetos e
+5 minutos para concertar possiveis erros
+*/
+
+class Professor {
+    private String nome;
+    private String disciplina;
+        public Professor(String nome, String disciplina) {
+        this.nome = nome;
+        this.disciplina = disciplina;
+        }
+        public String getNome() {
+        return nome;
+        }
+        public void setNome(String nome) {
+        this.nome = nome;
+        }
+        public String getDisciplina() {
+        return disciplina;
+        }
+        public void setDisciplina(String disciplina) {
+        this.disciplina = disciplina;
+        }
+        public void mostrar() {
+        System.out.println("Professor: " + nome);
+        System.out.println("Disciplina: " + disciplina);
+        }
+    }
+
+class Aluno {
+    private String nome;
+    private int idade;
+    private String curso;
+    private Professor professor;
+        public Aluno(String nome,  int idade,String curso, Professor professor) {
+        setNome(nome);
+        setIdade(idade);
+        setCurso(curso);
+        setProfessor(professor);
+        }
+        public Aluno(String nome,  int idade, String curso) {
+        setNome(nome);
+        setIdade(idade);
+        setCurso(curso);
+        }
+        public String getNome() {
+            return nome;
+        }
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+        public int getIdade() {
+            return idade;
+        }
+        public void setIdade(int idade) {
+            if (idade < 17) {
+            System.out.println("idade invalida");
+        }
+        this.idade = idade;
+        }
+        public String getCurso() {
+            return curso;
+        }
+         public void setCurso(String curso) {
+            if (curso.isEmpty()) {
+            System.out.println("Curso invalido");
+        }
+            this.curso = curso;
+        }
+        public Professor getProfessor() {
+            return professor;
+        }
+        public void setProfessor(Professor professor) {
+            this.professor = professor;
+    }
+    public void mostrar() {
+        System.out.println("Aluno: " + nome);
+        System.out.println("Idade: " + idade);
+        System.out.println("Curso: " + curso);
+
+        if (professor != null) {
+            professor.mostrar();
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Professor professor = new Professor(
+            "Cleon",
+            "POO"
+        );
+        Aluno aluno1 = new Aluno(
+            "Laine",
+            21,
+            "BCC",
+            professor
+        );
+        aluno1.mostrar();
+        System.out.println();
+        Aluno aluno2 = new Aluno(
+            "Mariana",
+            18,
+            "BCC"
+        );
+        aluno2.mostrar();
+        System.out.println();
+        Aluno aluno3 = new Aluno(
+            "Joao Lucas",
+            15,
+            "BCC"
+        );
+        aluno3.mostrar();
+        System.out.println();
+}}
+/*Autoavaliação
+Criterios exigidos: 
+Duas classes: Aluno e prfessor, que utilizaram objetos uma da outra;
+Atributos fechados (private pois foi feito em Java), acessados por getters e setters ou properties.
+Construtor que exige os dados indispensáveis e reaproveita os setters para validar.
+Duas formas de criar o objeto: sobrecarga em Java ou parâmetros padrão em Python- java
+Pelo menos duas regras de validação que recusem valores inválidos:( Idade >18 e curso !=null)
+A demonstração roda e mostra uma criação válida, uma recusa e as duas formas de criação:
+Nesse caso a Aluna Laine seria a valida e o Aluno João Lucas o invalido, por conta da idade que está fora dos parametros .
+Parte mais trabalhosa: Fazer com que as duas classes e seus obejtos se relacionarem, como resolvi 
+*/
