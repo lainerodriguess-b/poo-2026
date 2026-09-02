@@ -1,0 +1,147 @@
+# Registro de uso de IA:
+# Ferramenta utilizada: ChatGPT.
+# Utilização: auxílio na implementação das classes Item, Mago e Guerreiro,
+# explicação dos conceitos de herança e composição e ajuda para ajustar
+# o construtor da classe Personagem.
+# Modificações manuais: conferi e adaptei o código à estrutura
+# da classe Personagem que já havia sido feita anteriormente,
+# incluindo a validação dos atributos e o funcionamento do construtor.
+
+class Personagem:
+    def __init__(self, nome, vida, nivel):
+        self.nome = nome
+        self.vida = vida
+        self.nivel = nivel
+        self.inventario = []
+
+    @property
+    def nome(self):
+        return self._nome
+
+    @nome.setter
+    def nome(self, nome):
+        self._nome = nome
+
+    @property
+    def vida(self):
+        return self._vida
+
+    @vida.setter
+    def vida(self, vida):
+        if 0 <= vida <= 100:
+            self._vida = vida
+        else:
+            print("Vida invaida!")
+
+    @property
+    def nivel(self):
+        return self._nivel
+
+    @nivel.setter
+    def nivel(self, nivel):
+        if nivel >= 1:
+            self._nivel = nivel
+        else:
+            print("Nível invalido!")
+
+    def pegar(self, item):
+        self.inventario.append(item)
+
+    def receber_dano(self, dano):
+        self.vida -= dano
+
+        if self.vida < 0:
+            self.vida = 0
+
+    def ficha(self):
+        resultado = f"Nome: {self.nome}\n"
+        resultado += f"Vida: {self.vida}\n"
+        resultado += f"Nível: {self.nivel}\n"
+        resultado += "Inventário:\n"
+
+        if len(self.inventario) == 0:
+            resultado += "Nenhum item\n"
+        else:
+            for item in self.inventario:
+                resultado += f"- {item.descricao()}\n"
+
+        return resultado
+
+class Item:
+
+    def __init__(self, nome, bonus):
+        self.nome = nome
+
+        if bonus >= 0:
+            self.bonus = bonus
+        else:
+            print("Bonus inválido!")
+
+    def descricao(self):
+        return f"{self.nome} (+{self.bonus})"
+
+
+class Mago(Personagem):
+
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.mana = 50
+
+    @property
+    def mana(self):
+        return self._mana
+
+    @mana.setter
+    def mana(self, mana):
+        if mana >= 0:
+            self._mana = mana
+        else:
+            print("Mana inválida!")
+
+    def ficha(self):
+        return super().ficha() + f"Mana: {self.mana}\n"
+
+
+class Guerreiro(Personagem):
+
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.defesa = 5
+
+    @property
+    def defesa(self):
+        return self._defesa
+
+    @defesa.setter
+    def defesa(self, defesa):
+        if defesa >= 0:
+            self._defesa = defesa
+        else:
+            print("Defesa inválida!")
+
+    def receber_dano(self, dano):
+        dano_efetivo = max(0, dano - self.defesa)
+        super().receber_dano(dano_efetivo)
+
+    def ficha(self):
+        return super().ficha() + f"Defesa: {self.defesa}\n"
+
+espada = Item("Espada de Aço", 3)
+
+laine = Mago("Laine", 80, 5)
+
+laine.pegar(espada)
+
+print("MAGA:")
+print(laine.ficha())
+
+mari = Guerreiro("Mari", 100, 5)
+
+mari.receber_dano(8)
+
+print("GUERREIRA:")
+print(mari.ficha())
+print("Vida que restou:", mari.vida)
+
+print("\nTESTE DA MANA:")
+laine.mana = -10
