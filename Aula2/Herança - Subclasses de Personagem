@@ -1,0 +1,198 @@
+/*
+ Registro de uso de IA:
+ Ferramenta utilizada: ChatGPT.
+ Utilização: auxílio na implementação das classes Item, Mago e Guerreiro,
+ explicação dos conceitos de herança e composição e ajuda para ajustar
+ o construtor da classe Personagem para que os dados fossem passados
+ corretamente para as subclasses, além de ajudar na correção dos erros
+ que foram surgindo durante a execução da tividade e na identação correta do codigo.
+ Modificações manuais: conferi e adaptei o código à estrutura
+ da classe Personagem que já havia sido feita anteriormente,
+  incluindo a validação dos atributos e o funcionamento do construtor.
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        Item espada = new Item("Espada de Aço", 3);
+        Mago laine = new Mago("Laine", 80, 5);
+        laine.pegar(espada);
+
+        System.out.println("MAGA:");
+        System.out.println(laine.ficha());
+
+        Guerreiro mari = new Guerreiro("Mari", 100, 5);
+
+        mari.receberDano(8);
+
+        System.out.println("GUERREIRA:");
+        System.out.println(mari.ficha());
+        System.out.println("Vida que restou: " + mari.getVida());
+
+        laine.setMana(-10);
+    }
+}
+
+class Personagem {
+
+    private String nome;
+    private int vida;
+    private int nivel;
+
+    private List<Item> inventario = new ArrayList<>();
+
+    public Personagem(String nome, int vida, int nivel) {
+        setNome(nome);
+        setVida(vida);
+        setNivel(nivel);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    public int getVida() {
+        return vida;
+    }
+    public int getNivel() {
+        return nivel;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public void setVida(int vida) {
+        if (vida >= 0 && vida <= 100) {
+            this.vida = vida;
+        } else {
+            System.out.println("Vida invalida!");
+        }
+    }
+    public void setNivel(int nivel) {
+        if (nivel >= 1) {
+            this.nivel = nivel;
+        } else {
+            System.out.println("Nivel invalido!");
+        }
+    }
+    public void pegar(Item item) {
+        inventario.add(item);
+    }
+
+    public List<Item> getInventario() {
+        return inventario;
+    }
+
+    public void receberDano(int dano) {
+        vida -= dano;
+
+        if (vida < 0) {
+            vida = 0;
+        }
+    }
+    public String ficha() {
+        String resultado = "Nome: " + nome + "\n";
+        resultado += "Vida: " + vida + "\n";
+        resultado += "Nivel: " + nivel + "\n";
+        resultado += "Inventario:\n";
+
+        if (inventario.isEmpty()) {
+            resultado += "Nenhum item\n";
+        } else {
+            for (Item item : inventario) {
+                resultado += "- " + item.descricao() + "\n";
+            }
+        }
+
+        return resultado;
+}
+}
+
+class Item {
+
+    private String nome;
+    private int bonus;
+
+    public Item(String nome, int bonus) {
+        this.nome = nome;
+
+        if (bonus >= 0) {
+            this.bonus = bonus;
+        } else {
+            throw new IllegalArgumentException("Bonus nao pode ser negativo");
+        }
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getBonus() {
+        return bonus;
+    }
+
+    public String descricao() {
+        return nome + " (+" + bonus + ")";
+    }
+}
+
+
+class Mago extends Personagem {
+
+    private int mana;
+
+    public Mago(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
+        mana = 50;
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public void setMana(int mana) {
+        if (mana >= 0) {
+            this.mana = mana;
+        } else {
+            System.out.println("Mana invalida!");
+        }
+    }
+
+    @Override
+    public String ficha() {
+        return super.ficha() + "Mana: " + mana + "\n";
+    }
+}
+
+class Guerreiro extends Personagem {
+
+    private int defesa;
+
+    public Guerreiro(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
+        defesa = 5;
+    }
+
+    public int getDefesa() {
+        return defesa;
+    }
+
+    public void setDefesa(int defesa) {
+        if (defesa >= 0) {
+            this.defesa = defesa;
+        } else {
+            System.out.println("Defesa invalida!");
+        }
+    }
+
+    @Override
+    public void receberDano(int dano) {
+        int danoEfetivo = Math.max(0, dano - defesa);
+        super.receberDano(danoEfetivo);
+    }
+
+    @Override
+    public String ficha() {
+        return super.ficha() + "Defesa: " + defesa + "\n";
+    }
+}
