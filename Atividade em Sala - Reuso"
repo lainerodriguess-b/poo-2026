@@ -1,0 +1,109 @@
+/*
+Domínio: Faculdade
+Superclasse: Pessoa
+Subclasses: Aluno e Professor
+atributo próprio do aluno: matricula
+atributo próprio do professor: disciplina
+Método abstrato: apresentarTrabalho
+Método sobrescrito: mostrarDados
+
+A IA foi utilizada para ajudar na organização,
+entendimento  do código e para compreender o conceito e utilização 
+de herança e polimorfismo.
+Link do uso da IA : https://chatgpt.com/share/6a9973a5-a224-83e9-a4a2-c5629bba665e
+*/
+
+abstract class Pessoa {
+    protected String nome;
+    protected int idade;
+
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    public abstract void apresentarTrabalho();
+
+    public void mostrarDados() {
+        System.out.println("Nome: " + nome);
+        System.out.println("Idade: " + idade);
+    }
+}
+
+class Aluno extends Pessoa {
+    private String matricula;
+
+    public Aluno(String nome, int idade, String matricula) {
+        super(nome, idade);
+        this.matricula = matricula;
+    }
+
+    @Override
+    public void apresentarTrabalho() {
+        System.out.println("Aluna apresenta o trabalho.");
+    }
+
+    @Override
+    public void mostrarDados() {
+        super.mostrarDados();
+        System.out.println("Matrícula: " + matricula);
+    }
+}
+
+class Professor extends Pessoa {
+    private String disciplina;
+
+    public Professor(String nome, int idade, String disciplina) {
+        super(nome, idade);
+        this.disciplina = disciplina;
+    }
+
+    @Override
+    public void apresentarTrabalho() {
+        System.out.println("O professor assiste a apresentação do trabalho");
+    }
+
+    @Override
+    public void mostrarDados() {
+        super.mostrarDados();
+        System.out.println("Disciplina: " + disciplina);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Pessoa[] pessoas = {
+            new Aluno("Laine", 21, "2026105231940019"),
+            new Professor("Cleon", 35, "POO")
+        };
+
+        for (Pessoa pessoa : pessoas) {
+            pessoa.apresentarTrabalho();
+            pessoa.mostrarDados();
+            System.out.println();
+        }
+    }
+}
+
+/*
+AUTOAVALIAÇÃO
+
+Todos os critérios propostos foram atingidos. 
+Superclasse Pessoa e duas subclasses( aluno e professor)
+Um método abstrato e um método sobrescrito 
+Reaproveitamento da superclasse 
+Um único laço para percorrer
+os objetos das duas subclasses.
+
+O trecho que deu mais trabalho foi entender como utilizar
+herança e polimorfismo no mesmo laço e como implementar o método
+declarado na superclasse de forma diferente em cada subclasse e criar um metodo abstrato.
+
+Utilizei o ChatGPT para ajudar na organização e compreensão do
+código, dos conceitos de herança e polimorfismo e também para
+corrigir alguns erros durante o codigo e para revisar 
+o codigo final e conferir se os criterios foram atingidos.
+
+link da conversa com o chat: https://chatgpt.com/share/6a9973a5-a224-83e9-a4a2-c5629bba665e
+*/
