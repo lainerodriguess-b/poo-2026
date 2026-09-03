@@ -1,0 +1,215 @@
+"""
+Ferramenta de IA utilizada: ChatGPT.
+Utilizado para auxiliar na correção de erros do código,
+organização do código e compreensão de polimorfismo,
+classes e métodos.
+Além de utilizar para verificar se os critérios foram
+cumpridos corretamente.
+"""
+
+from abc import ABC, abstractmethod
+
+
+class Personagem(ABC):
+
+    def __init__(self, nome, vida, nivel):
+        self.set_nome(nome)
+        self.set_vida(vida)
+        self.set_nivel(nivel)
+        self.inventario = []
+
+    def get_nome(self):
+        return self.nome
+
+    def get_vida(self):
+        return self.vida
+
+    def get_nivel(self):
+        return self.nivel
+
+    def set_nome(self, nome):
+        self.nome = nome
+
+    def set_vida(self, vida):
+        if 0 <= vida <= 200:
+            self.vida = vida
+        else:
+            print("Vida invalida!")
+
+    def set_nivel(self, nivel):
+        if nivel >= 1:
+            self.nivel = nivel
+        else:
+            print("Nivel invalido!")
+
+    def pegar(self, item):
+        self.inventario.append(item)
+
+    def get_inventario(self):
+        return self.inventario
+
+    def receber_dano(self, dano):
+        self.vida -= dano
+
+        if self.vida < 0:
+            self.vida = 0
+
+    def atacar(self, alvo):
+        alvo.receber_dano(10)
+
+    @abstractmethod
+    def habilidade(self):
+        pass
+
+    def ficha(self):
+        resultado = "Nome: " + self.nome + "\n"
+        resultado += "Vida: " + str(self.vida) + "\n"
+        resultado += "Nivel: " + str(self.nivel) + "\n"
+        resultado += "Habilidade: " + self.habilidade() + "\n"
+        resultado += "Inventario:\n"
+
+        if not self.inventario:
+            resultado += "Nenhum item\n"
+        else:
+            for item in self.inventario:
+                resultado += "- " + item.descricao() + "\n"
+
+        return resultado
+
+class Item:
+
+    def __init__(self, nome, bonus):
+        self.nome = nome
+
+        if bonus >= 0:
+            self.bonus = bonus
+        else:
+            raise ValueError("Bonus nao pode ser negativo")
+
+    def get_nome(self):
+        return self.nome
+
+    def get_bonus(self):
+        return self.bonus
+
+    def descricao(self):
+        return self.nome + " (+" + str(self.bonus) + ")"
+
+
+class Mago(Personagem):
+
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.mana = 50
+
+    def get_mana(self):
+        return self.mana
+
+    def set_mana(self, mana):
+        if mana >= 0:
+            self.mana = mana
+        else:
+            print("Mana invalida!")
+
+    def habilidade(self):
+        return "conjuração de sombras"
+
+    def ficha(self):
+        return super().ficha() + "Mana: " + str(self.mana) + "\n"
+
+
+class Guerreiro(Personagem):
+
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.defesa = 5
+
+    def get_defesa(self):
+        return self.defesa
+
+    def set_defesa(self, defesa):
+        if defesa >= 0:
+            self.defesa = defesa
+        else:
+            print("Defesa invalida!")
+
+    def habilidade(self):
+        return "evocação de raios"
+
+    def receber_dano(self, dano):
+        dano_efetivo = max(0, dano - self.defesa)
+        super().receber_dano(dano_efetivo)
+
+    def ficha(self):
+        return super().ficha() + "Defesa: " + str(self.defesa) + "\n"
+
+
+class Chefe(Personagem):
+
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.forca = 20
+
+    def get_forca(self):
+        return self.forca
+
+    def set_forca(self, forca):
+        if forca >= 0:
+            self.forca = forca
+        else:
+            print("Forca invalida!")
+
+    def habilidade(self):
+        return "fatality"
+
+    def ficha(self):
+        return (
+            "[CHEFE] " + self.get_nome()
+            + " (vida: " + str(self.get_vida())
+            + ", forca: " + str(self.forca) + ")\n"
+        )
+
+
+def main():
+
+    print("\n*BATALHA FINAL*")
+
+    laine = Mago("Laine", 80, 5)
+    mari = Guerreiro("Mari", 100, 5)
+
+    espada = Item("Espada de Aço", 3)
+
+    laine.pegar(espada)
+
+    chefe = Chefe("João - o barbaro", 200, 1)
+
+    herois = []
+
+    herois.append(laine)
+    herois.append(mari)
+
+    for heroi in herois:
+
+        print("\nHERÓI")
+        print(heroi.ficha())
+
+        print(
+            "Habilidade: "
+            + heroi.get_nome()
+            + " usa "
+            + heroi.habilidade()
+        )
+
+        heroi.atacar(chefe)
+
+        print(
+            heroi.get_nome()
+            + " atacou o Chefe causando 10 de dano."
+        )
+
+    print("\nCHEFE APÓS OS ATAQUES")
+    print(chefe.ficha())
+
+
+if __name__ == "__main__":
+    main()
