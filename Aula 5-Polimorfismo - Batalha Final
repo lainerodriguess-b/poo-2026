@@ -1,37 +1,60 @@
+/*
+  Ferramenta de IA utilizada: ChatGPT.
+  Utilizado para auxiliar na correção de erros do codigo,
+ organização do código e compreensão de polimorfismo,
+ classes e métodos.
+ Além de utilizar para verificar se os criterios foram
+ cumpridos corretamente.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        Item espada = new Item("Espada de Aço", 3);
+        System.out.println("\n*BATALHA FINAL*");
 
+  
         Mago laine = new Mago("Laine", 80, 5);
         Guerreiro mari = new Guerreiro("Mari", 100, 5);
 
+     
+        Item espada = new Item("Espada de Aço", 3);
+
         laine.pegar(espada);
+ 
+        Chefe chefe = new Chefe("João - o barbaro", 200, 1);
 
-        Chefe chefe = new Chefe("Ana Julia");
+        List<Personagem> herois = new ArrayList<>();
 
-        List<Personagem> personagens = new ArrayList<>();
+        herois.add(laine);
+        herois.add(mari);
 
-        personagens.add(laine);
-        personagens.add(mari);
+        // Ataques dos heróis
+        for (Personagem heroi : herois) {
 
-        for (Personagem personagem : personagens) {
-
-            System.out.println(personagem.ficha());
+            System.out.println("\nHERÓI");
+            System.out.println(heroi.ficha());
 
             System.out.println(
-                personagem.getNome() + " usa " + personagem.habilidade()
+                "Habilidade: " + heroi.getNome()
+                + " usa " + heroi.habilidade()
             );
 
-            personagem.atacar(chefe);
+            int dano = 20;
 
-            System.out.println();
+            chefe.receberDano(dano);
+
+            System.out.println(
+                heroi.getNome()
+                + " atacou o Chefe causando "
+                + dano
+                + " de dano."
+            );
         }
-
-        System.out.println("Chefe:");
+        System.out.println("\nCHEFE APÓS OS ATAQUES");
         System.out.println(chefe.ficha());
     }
 }
@@ -105,6 +128,7 @@ abstract class Personagem {
     public abstract String habilidade();
 
     public String ficha() {
+
         String resultado = "Nome: " + nome + "\n";
         resultado += "Vida: " + vida + "\n";
         resultado += "Nivel: " + nivel + "\n";
@@ -176,7 +200,7 @@ class Mago extends Personagem {
 
     @Override
     public String habilidade() {
-        return "rajada arcana";
+        return "conjuração de sombras";
     }
 
     @Override
@@ -208,7 +232,7 @@ class Guerreiro extends Personagem {
 
     @Override
     public String habilidade() {
-        return "escudo de aço";
+        return "evocação de raios";
     }
 
     @Override
@@ -227,8 +251,8 @@ class Chefe extends Personagem {
 
     private int forca;
 
-    public Chefe(String nome) {
-        super(nome, 200, 1);
+    public Chefe(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
         this.forca = 20;
     }
 
@@ -246,7 +270,7 @@ class Chefe extends Personagem {
 
     @Override
     public String habilidade() {
-        return "ataque devastador";
+        return "fatality";
     }
 
     @Override
