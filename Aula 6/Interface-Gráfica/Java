@@ -1,0 +1,300 @@
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        new TelaCriacaoHeroi();
+    }
+}
+
+class TelaCriacaoHeroi extends JFrame {
+
+    public TelaCriacaoHeroi() {
+        super("IF Quest");
+
+        setSize(400, 250);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        JLabel titulo = new JLabel("Criação de Herói", SwingConstants.CENTER);
+        titulo.setText("Criação de Herói");
+        add(titulo, BorderLayout.NORTH);
+
+        JPanel formulario = new JPanel(new GridLayout(3, 2, 5, 5));
+
+        JLabel nomeLabel = new JLabel("Nome:");
+        JTextField nome = new JTextField();
+
+        JLabel vidaLabel = new JLabel("Vida:");
+        JTextField vida = new JTextField();
+
+        JLabel classeLabel = new JLabel("Classe:");
+        JTextField classe = new JTextField();
+
+        formulario.add(nomeLabel);
+        formulario.add(nome);
+        formulario.add(vidaLabel);
+        formulario.add(vida);
+        formulario.add(classeLabel);
+        formulario.add(classe);
+
+        add(formulario, BorderLayout.CENTER);
+
+        JButton criar = new JButton("Criar Herói");
+        criar.setEnabled(false);
+        add(criar, BorderLayout.SOUTH);
+
+        System.out.println(nome.getText());
+
+        setVisible(true);
+    }
+}
+
+class ForcaInsuficienteException extends Exception {
+
+    public ForcaInsuficienteException(int forca) {
+        super("Força insuficiente. Força atual: " + forca);
+    }
+}
+
+class SemManaException extends Exception {
+
+    public SemManaException(int mana) {
+        super("Mana insuficiente. Mana atual: " + mana);
+    }
+}
+
+abstract class Personagem {
+
+    private String nome;
+    private int vida;
+    private int nivel;
+    private List<Item> inventario = new ArrayList<>();
+
+    public Personagem(String nome, int vida, int nivel) {
+        setNome(nome);
+        setVida(vida);
+        setNivel(nivel);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setVida(int vida) {
+        if (vida < 0 || vida > 200) {
+            throw new IllegalArgumentException("Vida inválida" + vida);
+        }
+        this.vida = vida;
+    }
+
+    public void setNivel(int nivel) {
+        if (nivel >= 1) {
+            this.nivel = nivel;
+        } else {
+            System.out.println("Nivel invalido!");
+        }
+    }
+
+    public void pegar(Item item) {
+        inventario.add(item);
+    }
+
+    public List<Item> getInventario() {
+        return inventario;
+    }
+
+    public void receberDano(int dano) {
+        vida -= dano;
+
+        if (vida < 0) {
+            vida = 0;
+        }
+    }
+
+    public void atacar(Personagem alvo) {
+        alvo.receberDano(10);
+    }
+
+    public abstract String habilidade();
+
+    public String ficha() {
+        String resultado = "Nome: " + nome + "\n";
+        resultado += "Vida: " + vida + "\n";
+        resultado += "Nivel: " + nivel + "\n";
+        resultado += "Habilidade: " + habilidade() + "\n";
+        resultado += "Inventario:\n";
+
+        if (inventario.isEmpty()) {
+            resultado += "Nenhum item\n";
+        } else {
+            for (Item item : inventario) {
+                resultado += "- " + item.descricao() + "\n";
+            }
+        }
+
+        return resultado;
+    }
+}
+
+class Item {
+
+    private String nome;
+    private int bonus;
+
+    public Item(String nome, int bonus) {
+        this.nome = nome;
+
+        if (bonus >= 0) {
+            this.bonus = bonus;
+        } else {
+            throw new IllegalArgumentException("Bonus nao pode ser negativo");
+        }
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getBonus() {
+        return bonus;
+    }
+
+    public String descricao() {
+        return nome + " (+" + bonus + ")";
+    }
+}
+
+class Mago extends Personagem {
+
+    private int mana;
+
+    public Mago(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
+        mana = 50;
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public void setMana(int mana) {
+        if (mana < 0) {
+            throw new IllegalArgumentException("Mana inválida" + mana);
+        }
+        this.mana = mana;
+    }
+
+    public void lancarFeitico() throws SemManaException {
+        if (mana < 10) {
+            throw new SemManaException(mana);
+        }
+
+        mana -= 10;
+        System.out.println("Mago lançou o feitiço!");
+    }
+
+    @Override
+    public String habilidade() {
+        return "conjuração de sombras";
+    }
+
+    @Override
+    public String ficha() {
+        return super.ficha() + "Mana: " + mana + "\n";
+    }
+}
+
+class Guerreiro extends Personagem {
+
+    private int defesa;
+    private int forca = 5;
+
+    public Guerreiro(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
+        defesa = 5;
+    }
+
+    public int getDefesa() {
+        return defesa;
+    }
+
+    public void golpeEspecial() throws ForcaInsuficienteException {
+        if (forca < 10) {
+            throw new ForcaInsuficienteException(forca);
+        }
+
+        System.out.println("Guerreiro usou o golpe especial!");
+    }
+
+    public void setDefesa(int defesa) {
+        if (defesa < 0) {
+            throw new IllegalArgumentException("Defesa inválida" + defesa);
+        }
+        this.defesa = defesa;
+    }
+
+    @Override
+    public String habilidade() {
+        return "evocação de raios";
+    }
+
+    @Override
+    public void receberDano(int dano) {
+        int danoEfetivo = Math.max(0, dano - defesa);
+        super.receberDano(danoEfetivo);
+    }
+
+    @Override
+    public String ficha() {
+        return super.ficha() + "Defesa: " + defesa + "\n";
+    }
+}
+
+class Chefe extends Personagem {
+
+    private int forca;
+
+    public Chefe(String nome, int vida, int nivel) {
+        super(nome, vida, nivel);
+        this.forca = 20;
+    }
+
+    public int getForca() {
+        return forca;
+    }
+
+    public void setForca(int forca) {
+        if (forca < 0) {
+            throw new IllegalArgumentException("Força inválida" + forca);
+        }
+        this.forca = forca;
+    }
+
+    @Override
+    public String habilidade() {
+        return "fatality";
+    }
+
+    @Override
+    public String ficha() {
+        return "[CHEFE] " + getNome()
+            + " (vida: " + getVida()
+            + ", forca: " + forca + ")\n";
+    }
+}
