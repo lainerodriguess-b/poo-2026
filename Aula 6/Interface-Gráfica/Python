@@ -1,0 +1,268 @@
+import tkinter as tk
+
+class ForcaInsuficienteException(Exception):
+    def __init__(self, forca):
+        super().__init__(f"Força insuficiente. Força atual: {forca}")
+
+class SemManaException(Exception):
+    def __init__(self, mana):
+        super().__init__(f"Mana insuficiente. Mana atual: {mana}")
+
+class Personagem:
+    def __init__(self, nome, vida, nivel):
+        self.setNome(nome)
+        self.setVida(vida)
+        self.setNivel(nivel)
+        self.inventario = []
+
+    def getNome(self):
+        return self.nome
+
+    def getVida(self):
+        return self.vida
+
+    def getNivel(self):
+        return self.nivel
+
+    def setNome(self, nome):
+        self.nome = nome
+
+    def setVida(self, vida):
+        if vida < 0 or vida > 200:
+            raise ValueError(f"Vida inválida{vida}")
+        self.vida = vida
+
+    def setNivel(self, nivel):
+        if nivel >= 1:
+            self.nivel = nivel
+        else:
+            print("Nivel invalido!")
+
+    def pegar(self, item):
+        self.inventario.append(item)
+
+    def getInventario(self):
+        return self.inventario
+
+    def receberDano(self, dano):
+        self.vida -= dano
+
+        if self.vida < 0:
+            self.vida = 0
+
+    def atacar(self, alvo):
+        alvo.receberDano(10)
+
+    def habilidade(self):
+        raise NotImplementedError
+
+    def ficha(self):
+        resultado = f"Nome: {self.nome}\n"
+        resultado += f"Vida: {self.vida}\n"
+        resultado += f"Nivel: {self.nivel}\n"
+        resultado += f"Habilidade: {self.habilidade()}\n"
+        resultado += "Inventario:\n"
+
+        if not self.inventario:
+            resultado += "Nenhum item\n"
+        else:
+            for item in self.inventario:
+                resultado += f"- {item.descricao()}\n"
+
+        return resultado
+class Item:
+    def __init__(self, nome, bonus):
+        self.nome = nome
+
+        if bonus >= 0:
+            self.bonus = bonus
+        else:
+            raise ValueError("Bonus nao pode ser negativo")
+
+    def getNome(self):
+        return self.nome
+
+    def getBonus(self):
+        return self.bonus
+
+    def descricao(self):
+        return f"{self.nome} (+{self.bonus})"
+
+
+class Mago(Personagem):
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.mana = 50
+
+    def getMana(self):
+        return self.mana
+
+    def setMana(self, mana):
+        if mana < 0:
+            raise ValueError(f"Mana inválida{mana}")
+        self.mana = mana
+
+    def lancarFeitico(self):
+        if self.mana < 10:
+            raise SemManaException(self.mana)
+
+        self.mana -= 10
+        print("Mago lançou o feitiço!")
+
+    def habilidade(self):
+        return "conjuração de sombras"
+
+    def ficha(self):
+        return super().ficha() + f"Mana: {self.mana}\n"
+
+
+class Guerreiro(Personagem):
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.defesa = 5
+        self.forca = 5
+
+    def getDefesa(self):
+        return self.defesa
+
+    def golpeEspecial(self):
+        if self.forca < 10:
+            raise ForcaInsuficienteException(self.forca)
+
+        print("Guerreiro usou o golpe especial!")
+
+    def setDefesa(self, defesa):
+        if defesa < 0:
+            raise ValueError(f"Defesa inválida{defesa}")
+        self.defesa = defesa
+
+    def habilidade(self):
+        return "evocação de raios"
+
+    def receberDano(self, dano):
+        danoEfetivo = max(0, dano - self.defesa)
+        super().receberDano(danoEfetivo)
+
+    def ficha(self):
+        return super().ficha() + f"Defesa: {self.defesa}\n"
+
+
+class Chefe(Personagem):
+    def __init__(self, nome, vida, nivel):
+        super().__init__(nome, vida, nivel)
+        self.forca = 20
+
+    def getForca(self):
+        return self.forca
+
+    def setForca(self, forca):
+        if forca < 0:
+            raise ValueError(f"Força inválida{forca}")
+        self.forca = forca
+
+    def habilidade(self):
+        return "fatality"
+
+    def ficha(self):
+        return f"[CHEFE] {self.getNome()} (vida: {self.getVida()}, forca: {self.forca})\n"
+
+
+class TelaCriacaoHeroi:
+    def __init__(self):
+        self.janela = tk.Tk()
+        self.janela.title("IF Quest")
+        self.janela.geometry("400x250")
+
+        titulo = tk.Label(self.janela, text="Criação de Herói")
+        titulo.pack()
+
+        formulario = tk.Frame(self.janela)
+        formulario.pack()
+
+        tk.Label(formulario, text="Nome:").grid(row=0, column=0)
+        nome = tk.Entry(formulario)
+        nome.grid(row=0, column=1)
+
+        tk.Label(formulario, text="Vida:").grid(row=1, column=0)
+        vida = tk.Entry(formulario)
+        vida.grid(row=1, column=1)
+
+        tk.Label(formulario, text="Classe:").grid(row=2, column=0)
+        classe = tk.Entry(formulario)
+        classe.grid(row=2, column=1)
+
+        criar = tk.Button(self.janela, text="Criar Herói", state="disabled")
+        criar.pack()
+
+        print(nome.get())
+
+        self.janela.mainloop()
+
+def batalha():
+    try:
+        mago = Mago("Laine", 120, 5)
+        print("Criação do mago bem sucedida")
+
+        magoInvalido = Mago("bobo", 450, -5)
+        print("Criação do mago bem sucedida")
+
+    except ValueError as e:
+        print("Erro ao criar o mago" + str(e))
+
+    print("\n*BATALHA FINAL*")
+
+    laine = Mago("Laine", 80, 5)
+    mari = Guerreiro("Mari", 100, 5)
+
+    espada = Item("Espada de Aço", 3)
+    laine.pegar(espada)
+
+    chefe = Chefe("João - o barbaro", 200, 1)
+
+    herois = [laine, mari]
+
+    for heroi in herois:
+        print("\nHERÓI")
+        print(heroi.ficha())
+
+        print(
+            "Habilidade: " + heroi.getNome()
+            + " usa " + heroi.habilidade()
+        )
+
+        try:
+            if isinstance(heroi, Mago):
+                heroi.lancarFeitico()
+
+            dano = 20
+            chefe.receberDano(dano)
+
+            print(
+                heroi.getNome()
+                + " atacou o Chefe causando "
+                + str(dano)
+                + " de dano."
+            )
+
+        except SemManaException as e:
+            print(e)
+            print("Mago perdeu o turno.")
+            mari.atacar(chefe)
+            print("Guerreiro atacou no lugar do Mago.")
+
+        finally:
+            print("Fim do turno.")
+
+    print("\n*GOLPE ESPECIAL*")
+
+    try:
+        mari.golpeEspecial()
+    except ForcaInsuficienteException as e:
+        print(e)
+
+    print("\nCHEFE APÓS OS ATAQUES")
+    print(chefe.ficha())
+
+
+TelaCriacaoHeroi()
+batalha()
